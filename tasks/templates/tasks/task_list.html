@@ -1,0 +1,245 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TaskFlow</title>
+
+    <link rel="stylesheet" href="{% static 'tasks/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div>
+            <h1>TaskFlow</h1>
+            <p>Organize your work. Complete your goals.</p>
+        </div>
+
+        <a href="{% url 'add_task' %}" class="add-btn">
+            ＋ Add Task
+        </a>
+    </header>
+
+
+    <!-- CELEBRATION -->
+    {% if all_completed %}
+
+    <div class="celebration">
+        <div class="celebration-icon">🎉</div>
+
+        <h2>All Tasks Completed!</h2>
+
+        <p>
+            Amazing work! You have completed everything on your list.
+        </p>
+
+        <div class="celebration-emojis">
+            🎊 ⭐ 🎉 🏆 ⭐ 🎊
+        </div>
+    </div>
+
+    {% endif %}
+
+
+    <!-- STATISTICS -->
+    <div class="stats">
+
+        <div class="stat-card">
+            <span class="stat-number">{{ total_tasks }}</span>
+            <span>Total Tasks</span>
+        </div>
+
+        <div class="stat-card completed-stat">
+            <span class="stat-number">{{ completed_tasks }}</span>
+            <span>Completed</span>
+        </div>
+
+        <div class="stat-card pending-stat">
+            <span class="stat-number">{{ pending_tasks }}</span>
+            <span>Pending</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-number">{{ high_priority_tasks }}</span>
+            <span>High Priority</span>
+        </div>
+
+    </div>
+
+
+    <!-- TASKS -->
+     
+
+    <div class="task-grid">
+
+        {% for task in tasks %}
+
+        <div class="task-card
+            {% if task.completed %}
+                completed-card
+            {% else %}
+                pending-card
+            {% endif %}
+        ">
+
+            <!-- STATUS ICON -->
+
+            {% if task.completed %}
+
+                <div class="status-icon completed-icon">
+                    ✓
+                </div>
+
+            {% else %}
+
+                <div class="status-icon pending-icon">
+                    !
+                </div>
+
+            {% endif %}
+
+
+            <!-- TASK INFORMATION -->
+
+            <h2>{{ task.title }}</h2>
+
+            <p class="description">
+                {{ task.description }}
+            </p>
+
+
+            <div class="task-info">
+
+                <p>
+                    <strong>Category:</strong>
+                    {{ task.category }}
+                </p>
+
+                <p>
+                    <strong>Priority:</strong>
+
+                    <span class="priority {{ task.priority|lower }}">
+                        {{ task.priority }}
+                    </span>
+
+                </p>
+
+                {% if task.due_date %}
+
+                <p>
+                    <strong>Due:</strong>
+                    {{ task.due_date }}
+                </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <a href="{% url 'toggle_task' task.id %}"
+   class="status-link">
+
+    {% if task.completed %}
+
+        <div class="status completed-status">
+            ✓ Completed
+        </div>
+
+    {% else %}
+
+        <div class="status pending-status">
+            ! Pending
+        </div>
+
+    {% endif %}
+
+</a>
+
+
+            <!-- BUTTONS -->
+
+            <div class="actions">
+
+                <a href="{% url 'edit_task' task.id %}" class="edit-btn">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_task' task.id %}" class="delete-btn">
+                    Delete
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">📝</div>
+
+            <h2>No Tasks Yet</h2>
+
+            <p>Create your first task and start getting things done!</p>
+
+            <a href="{% url 'add_task' %}" class="add-btn">
+                ＋ Create First Task
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- SIMPLE CONFETTI EFFECT -->
+
+{% if all_completed %}
+
+<script>
+
+    function createConfetti() {
+
+        const emojis = ['🎉', '🎊', '⭐', '✨', '🏆'];
+
+        for (let i = 0; i < 40; i++) {
+
+            const confetti = document.createElement('div');
+
+            confetti.className = 'confetti';
+
+            confetti.innerText =
+                emojis[Math.floor(Math.random() * emojis.length)];
+
+            confetti.style.left =
+                Math.random() * 100 + 'vw';
+
+            confetti.style.animationDelay =
+                Math.random() * 3 + 's';
+
+            document.body.appendChild(confetti);
+
+        }
+
+    }
+
+    createConfetti();
+
+</script>
+
+{% endif %}
+
+</body>
+</html>
