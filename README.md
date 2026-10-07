@@ -2,6 +2,10 @@
 
 A simple and user-friendly **Task Management Web Application** built using **Python and Django**. TaskFlow helps users organize their tasks, track their progress, set priorities, and manage deadlines.
 
+## 🖥️ Application Preview
+
+![TaskFlow Dashboard](preview.png)
+
 ## ✨ Features
 
 - ➕ Add new tasks
